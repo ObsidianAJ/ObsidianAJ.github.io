@@ -10,3 +10,11 @@ body {
     text-align: center;
     color: aliceblue;
 }
+
+.navlink:hover {
+    color:blue;
+}
+
+a:hover {
+    color:red;
+}
