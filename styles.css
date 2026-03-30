@@ -1,0 +1,12 @@
+body {
+    background-color: antiquewhite;
+    font-family: Arial;
+}
+
+.navbar{
+    background-color: black;
+    text-decoration: none;
+    padding: 30px;
+    text-align: center;
+    color: aliceblue;
+}
