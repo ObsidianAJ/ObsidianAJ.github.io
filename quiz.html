@@ -15,6 +15,7 @@
             <a href = "resume.html" style="color: aliceblue;">Resume</a>
             <a href = "gallery.html" style="color: aliceblue;">Photo Gallery</a>
             <a href = "quiz.html" style="color: aliceblue;">Quiz</a>
+            <a href = "madlib.html" style="color: aliceblue;">MadLib Game</a>
         </div>
 
     <!-- WELCOME SCREEN -->
@@ -28,7 +29,7 @@ You will be given a state, and your job is to type in its capital.
 </div>
 
 <!-- QUIZ CONTENT (hidden at start) -->
-<div id="quizContainer" style="text-align: center; display: none;">
+<div id="quizContainer" style="text-align: center; display:none;">
 
 <h2 id="question"></h2>
 
@@ -43,6 +44,99 @@ You will be given a state, and your job is to type in its capital.
 <p id="score">Correct Answers: 0</p>
 </div>
     
+    <script>
+        let quizData = [{state: "Alabama", capital: "Montgomery"},
+  {state: "Alaska", capital: "Juneau"},
+  {state: "Arizona", capital: "Phoenix"},
+  {state: "Arkansas", capital: "Little Rock"},
+  {state: "California", capital: "Sacramento"},
+  {state: "Colorado", capital: "Denver"},
+  {state: "Connecticut", capital: "Hartford"},
+  {state: "Delaware", capital: "Dover"},
+  {state: "Florida", capital: "Tallahassee"},
+  {state: "Georgia", capital: "Atlanta"},
+  {state: "Hawaii", capital: "Honolulu"},
+  {state: "Idaho", capital: "Boise"},
+  {state: "Illinois", capital: "Springfield"},
+  {state: "Indiana", capital: "Indianapolis"},
+  {state: "Iowa", capital: "Des Moines"},
+  {state: "Kansas", capital: "Topeka"},
+  {state: "Kentucky", capital: "Frankfort"},
+  {state: "Louisiana", capital: "Baton Rouge"},
+  {state: "Maine", capital: "Augusta"},
+  {state: "Maryland", capital: "Annapolis"},
+  {state: "Massachusetts", capital: "Boston"},
+  {state: "Michigan", capital: "Lansing"},
+  {state: "Minnesota", capital: "Saint Paul"},
+  {state: "Mississippi", capital: "Jackson"},
+  {state: "Missouri", capital: "Jefferson City"},
+  {state: "Montana", capital: "Helena"},
+  {state: "Nebraska", capital: "Lincoln"},
+  {state: "Nevada", capital: "Carson City"},
+  {state: "New Hampshire", capital: "Concord"},
+  {state: "New Jersey", capital: "Trenton"},
+  {state: "New Mexico", capital: "Santa Fe"},
+  {state: "New York", capital: "Albany"},
+  {state: "North Carolina", capital: "Raleigh"},
+  {state: "North Dakota", capital: "Bismarck"},
+  {state: "Ohio", capital: "Columbus"},
+  {state: "Oklahoma", capital: "Oklahoma City"},
+  {state: "Oregon", capital: "Salem"},
+  {state: "Pennsylvania", capital: "Harrisburg"},
+  {state: "Rhode Island", capital: "Providence"},
+  {state: "South Carolina", capital: "Columbia"},
+  {state: "South Dakota", capital: "Pierre"},
+  {state: "Tennessee", capital: "Nashville"},
+  {state: "Texas", capital: "Austin"},
+  {state: "Utah", capital: "Salt Lake City"},
+  {state: "Vermont", capital: "Montpelier"},
+  {state: "Virginia", capital: "Richmond"},
+  {state: "Washington", capital: "Olympia"},
+  {state: "West Virginia", capital: "Charleston"},
+  {state: "Wisconsin", capital: "Madison"},
+  {state: "Wyoming", capital: "Cheyenne"} ];
+
+        let currentQuestion = 0;
+        let correctCount = 0;
+
+        function loadQuestion(){
+            let stateName = quizData[currentQuestion].state;
+            document.getElementById("question").innerText = "What is the capitol of " + stateName + "?";
+            
+        }
+
+        function checkAnswer(){
+            let correctAnswer = quizData[currentQuestion].capital;
+            let userAnswer = document.getElementById("answerInput").value;
+
+            if (userAnswer === correctAnswer){
+                document.getElementById("feedback").innerText = "You Got It Right!";
+                correctCount++;
+            } else{
+                document.getElementById("feedback").innerText = "You Got It Wrong :( The Correct Answer Was "+correctAnswer+".";
+            }
+
+            document.getElementById("score").innerText = "Correct Answers: " + correctCount;
+
+            document.getElementById("answerInput").value = "";
+
+            currentQuestion++
+            if (currentQuestion < quizData.length){
+                loadQuestion();
+            }else{
+                document.getElementById("question").innerText = "Quiz Complete!";
+            }
+        }
+
+        function startQuiz(){
+            document.getElementById("welcomeScreen").style.display = "none";
+            document.getElementById("quizContainer").style.display = "block";
+            loadQuestion()
+
+        }
+
+    </script>
+
     </body>
 
 </html>

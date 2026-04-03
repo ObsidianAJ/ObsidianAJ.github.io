@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <title>AJ Quiz</title>
+        <link rel="stylesheet" href="styles.css"
+
+    </head>
+
+    <body>
+        <div class = "navbar">
+            <a href = "index.html" style="color: aliceblue;">Home</a>
+            <a href = "resume.html" style="color: aliceblue;">Resume</a>
+            <a href = "gallery.html" style="color: aliceblue;">Photo Gallery</a>
+            <a href = "quiz.html" style="color: aliceblue;">Quiz</a>
+            <a href = "madlib.html" style="color: aliceblue;">MadLib Game</a>
+        </div>
+
+    <!-- WELCOME SCREEN -->
+<div id="welcomeScreen" style="text-align: center;">
+<h1>MadLib Game</h1>
+<p>
+Do A Short And Fun MadLib!
+</p>
+<button onclick="startQuiz()">Start Game</button>
+</div>
+
+<!-- QUIZ CONTENT (hidden at start) -->
+<div id="gameContainer" style="text-align: center; display:none;">
+
+<h2 id="question"></h2>
+
+<input id="answerInput" type="text" placeholder="Enter your answer">
+
+<br><br>
+
+<button onclick="checkAnswer()">Submit Answer</button>
+
+
+</div>
+
+<div id="finalProduct" style = "text-align: center; display: none;">
+    <h1 id="finalMadLib" style = "text-align: center;"></h1>
+</div>
+    
+    <script>
+        let madlibQuestion = ["adjective", "noun", "plural noun", "verb", "adverb", "place", "exclamation"];
+        let userInput = []
+
+        let questionNum = 0
+        
+
+        function loadQuestion(){
+            document.getElementById("question").innerText = "give me a/an " + madlibQuestion[questionNum] + ".";
+            
+        }
+
+        function checkAnswer(){
+            userInput.push(document.getElementById("answerInput").value);
+
+            document.getElementById("answerInput").value = "";
+
+            questionNum+=1
+            if (currentQuestion < madlibQuestion.length){
+                console.log(questionNum.value)
+                loadQuestion();
+            }else{
+                document.getElementById("welcomeScreen").style.display = "none";
+                document.getElementById("gameContainer").style.display = "none";
+                document.getElementById("finalProduct").style.display = "block"
+                document.getElementById("finalMadLib").innerText = "Today was a very " + userInput[0] + " day! " +
+            "I decided to take my favorite " + userInput[1] + " to the " + userInput[5] + ". " +
+            "As soon as I arrived, I saw a group of " + userInput[2] + " trying to " + userInput[3] + ". " +
+            "It was so strange that I shouted, " + userInput[6] + "! " +
+            "I started to run " + userInput[4] + " toward them, but I tripped over a park bench. " +
+            "Everyone stopped and stared. " +
+            "It was the most " + userInput[0] + " thing that ever happened to me!";
+
+            }
+        }
+
+        function startQuiz(){
+            document.getElementById("welcomeScreen").style.display = "none";
+            document.getElementById("gameContainer").style.display = "block";
+            loadQuestion()
+
+        }
+
+    </script>
+
+    </body>
+
+</html>
