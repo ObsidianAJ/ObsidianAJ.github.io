@@ -3,16 +3,18 @@ body {
     font-family: Arial;
 }
 
-.navbar{
+.navbar {
     background-color: black;
     text-decoration: none;
     padding: 30px;
     text-align: center;
     color: aliceblue;
+
 }
 
 .navlink:hover {
     color:blue;
+        
 }
 
 a:hover {

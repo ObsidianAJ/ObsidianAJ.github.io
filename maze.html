@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+
+        <title>AJ Block Game</title>
+        <link rel="stylesheet" href="styles.css">
+
+    </head>
+
+<body onload="startGame()">
+    <div class = "navbar">
+        <a href = "index.html" style="color: aliceblue;">Home</a>
+        <a href = "resume.html" style="color: aliceblue;">Resume</a>
+        <a href = "gallery.html" style="color: aliceblue;">Photo Gallery</a>
+        <a href = "quiz.html" style="color: aliceblue;">Quiz</a>
+        <a href = "madlib.html" style="color: aliceblue;">MadLib Game</a>
+        <a href = "blockgame.html" style="color: aliceblue;">Block Game</a>
+    </div>
+    <div style="text-align: center;">
+    <h2>Block Push Game</h2>
+    <p>Push blocks by touching them. You can push up to 2 at once.</p>
+    <canvas id="gameCanvas" width="600" height="600" style = "background-color: aliceblue;"></canvas>
+    </div>
+    <script>
+        let canvas, ctx, player, walls = [];
+
+        maze = [
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+            [1,0,1,0,0,1,1,1,1,1,1,1,1,0,1],
+            [1,0,1,1,0,0,0,0,0,0,0,0,0,0,1],
+            [1,0,1,1,0,1,1,1,1,1,1,1,1,0,1],
+            [1,0,1,1,0,1,0,0,0,0,0,1,1,0,1],
+            [1,0,1,1,0,1,1,1,1,1,0,1,1,0,1],
+            [1,0,1,1,1,1,1,1,0,1,0,0,0,0,1],
+            [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
+            [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
+            [1,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+            [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+        ];
+
+        const PLAYER_SIZE = 30;
+        const BLOCK_SIZE = 40;
+        const SPEED = 10;
+
+        class Player{
+            constructor(x,y){
+                this.x =x;
+                this.y = y;
+                this.size = PLAYER_SIZE;
+            }
+
+            draw(){
+                ctx.fillStyle = "green";
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
+            
+            move(dx, dy){
+                let newX = player.x + dx;
+                let newY = player.y + dy;
+
+                if(newX < 0 || newX > canvas.width - this.size || newY < 0 || newY > canvas.height - this.size){
+                    return;
+                }
+
+                let hitsWall = walls.some(w =>
+                    newX < w.x + w.size &&
+                    newX + this.size > w.x &&
+                    newY < w.y + w.size &&
+                    newY + this.size > w.y
+                );
+
+                if (hitsWall) {
+                    return;
+                }
+
+                player.x = newX;
+                player.y = newY;
+
+                draw();
+            }
+        }
+
+        class Wall{
+            constructor(x,y){
+                this.x = x;
+                this.y = y;
+                this.size = BLOCK_SIZE;
+            }
+
+            draw(){
+                ctx.fillStyle = "black";
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+        }
+    }
+            function startGame(){
+                canvas = document.getElementById("gameCanvas");
+                ctx = canvas.getContext("2d");
+                player = new Player(2*PLAYER_SIZE-15,2*PLAYER_SIZE-15);
+                walls = [];
+                document.addEventListener("keydown", handleKeys);
+                for (let row = 0; row < maze.length; row++){
+                    for (let col = 0; col < maze[row].length; col++){
+                        if (maze[row][col] === 1){
+                            walls.push(new Wall(col * BLOCK_SIZE, row * BLOCK_SIZE));
+                        }
+                    }
+                }
+                draw();
+            }
+
+            
+
+            function draw(){
+                ctx.clearRect(0,0, canvas.width, canvas.height);
+                player.draw();
+                walls.forEach(w => w.draw());
+            }
+
+            function handleKeys(e){
+                if (e.key === "w"){
+                    player.move(0,-SPEED);
+                }
+                if (e.key === "a"){
+                    player.move(-SPEED, 0);
+                }
+                if (e.key === "s"){
+                    player.move(0, SPEED);
+                }
+                if (e.key === "d"){
+                    player.move(SPEED,0);
+                }
+            }
+
+
+
+        
+
+
+
+    </script>
+</body>
