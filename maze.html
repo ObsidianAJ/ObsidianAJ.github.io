@@ -24,16 +24,16 @@
     <canvas id="gameCanvas" width="600" height="600" style = "background-color: aliceblue;"></canvas>
     </div>
     <script>
-        let canvas, ctx, player, walls = [];
+        let canvas, ctx, player, walls = [], gameWon = false;
 
         maze = [
             [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
             [1,0,1,0,0,1,1,1,1,1,1,1,1,0,1],
             [1,0,1,1,0,0,0,0,0,0,0,0,0,0,1],
             [1,0,1,1,0,1,1,1,1,1,1,1,1,0,1],
-            [1,0,1,1,0,1,0,0,0,0,0,1,1,0,1],
-            [1,0,1,1,0,1,1,1,1,1,0,1,1,0,1],
-            [1,0,1,1,1,1,1,1,0,1,0,0,0,0,1],
+            [1,0,1,1,0,1,2,0,0,0,0,1,1,0,1],
+            [1,0,1,1,3,1,1,1,1,1,0,1,1,0,1],
+            [1,0,1,1,1,1,1,1,0,1,0,0,4,0,1],
             [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
             [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
             [1,0,1,1,1,1,1,1,0,1,1,1,1,0,1],
@@ -61,6 +61,8 @@
             }
             
             move(dx, dy){
+                if (gameWon) return;
+                
                 let newX = player.x + dx;
                 let newY = player.y + dy;
 
@@ -74,8 +76,58 @@
                     newY < w.y + w.size &&
                     newY + this.size > w.y
                 );
+                let hitsWin = win.some(w =>
+                    newX < w.x + w.size &&
+                    newX + this.size > w.x &&
+                    newY < w.y + w.size &&
+                    newY + this.size > w.y
+                );
+                let hitsDoor = door.some(w =>
+                    newX < w.x + w.size &&
+                    newX + this.size > w.x &&
+                    newY < w.y + w.size &&
+                    newY + this.size > w.y
+                );
+                let hitsKey = keys.some(w =>
+                    newX < w.x + w.size &&
+                    newX + this.size > w.x &&
+                    newY < w.y + w.size &&
+                    newY + this.size > w.y
+                );
+
+
 
                 if (hitsWall) {
+                    return;
+                }
+
+                if (hitsDoor) {
+                    return;
+                }
+
+                if (hitsKey) {
+                    const keyIndex = keys.findIndex(k =>
+                        newX < k.x + k.size &&
+                        newX + this.size > k.x &&
+                        newY < k.y + k.size &&
+                        newY + this.size > k.y
+                    );
+
+                    if (keyIndex >= 0) {
+                        keys.splice(keyIndex, 1);
+                        door = [];
+                        player.x = newX;
+                        player.y = newY;
+                        draw();
+                        return;
+                    }
+                }
+
+                if (hitsWin) {
+                    gameWon = true;
+                    player.x = newX;
+                    player.y = newY;
+                    draw();
                     return;
                 }
 
@@ -98,28 +150,90 @@
                 ctx.fillRect(this.x, this.y, this.size, this.size);
         }
     }
+
+    class Win{
+        constructor(x,y){
+            this.x = x;
+            this.y = y;
+            this.size = BLOCK_SIZE;
+        }
+
+        draw(){
+            ctx.fillStyle = "green";
+            ctx.fillRect(this.x, this.y, this.size, this.size);
+        }
+    }
+
+        class Door{
+            constructor(x,y){
+                this.x = x;
+                this.y = y;
+                this.size = BLOCK_SIZE;
+            }
+
+            draw(){
+                ctx.fillStyle = "brown";
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
+        }
+
+        class Key{
+            constructor(x,y){
+                this.x = x;
+                this.y = y;
+                this.size = BLOCK_SIZE;
+            }  
+            draw(){
+                ctx.fillStyle = "yellow";
+                ctx.fillRect(this.x, this.y, this.size, this.size);
+            }
+        }
             function startGame(){
                 canvas = document.getElementById("gameCanvas");
                 ctx = canvas.getContext("2d");
+                gameWon = false;
                 player = new Player(2*PLAYER_SIZE-15,2*PLAYER_SIZE-15);
                 walls = [];
+                win = [];
+                door = [];
+                keys = [];
                 document.addEventListener("keydown", handleKeys);
                 for (let row = 0; row < maze.length; row++){
                     for (let col = 0; col < maze[row].length; col++){
                         if (maze[row][col] === 1){
                             walls.push(new Wall(col * BLOCK_SIZE, row * BLOCK_SIZE));
                         }
+                        if (maze[row][col] === 2){
+                            win.push(new Win(col * BLOCK_SIZE, row * BLOCK_SIZE));
+                        }
+                        if (maze[row][col] === 3){
+                            keys.push(new Key(col * BLOCK_SIZE, row * BLOCK_SIZE));
+                        }
+                        if (maze[row][col] === 4){
+                            door.push(new Door(col * BLOCK_SIZE, row * BLOCK_SIZE));
+                        }
                     }
                 }
+                
                 draw();
             }
-
-            
 
             function draw(){
                 ctx.clearRect(0,0, canvas.width, canvas.height);
                 player.draw();
                 walls.forEach(w => w.draw());
+                win.forEach(w => w.draw());
+                door.forEach(d => d.draw());
+                keys.forEach(k => k.draw());
+                
+                if (gameWon) {
+                    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = "white";
+                    ctx.font = "60px Arial";
+                    ctx.textAlign = "center";
+                    ctx.fillText("You Win!", canvas.width / 2, canvas.height / 2);
+                }
             }
 
             function handleKeys(e){
